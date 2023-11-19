@@ -4,10 +4,7 @@ import kr.easw.lesson03.model.dto.AWSKeyDto;
 import kr.easw.lesson03.model.dto.ResultDto;
 import kr.easw.lesson03.service.AWSService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
 
 // 해당 클래스를 Rest 컨트롤러로 지정합니다.
 // 모든 응답이 JSON으로 매핑되며, 이 클래스가 컨트롤러로 선언됩니다.
@@ -27,19 +24,16 @@ public class AWSConroller {
             @RequestParam("type") String type,
             // 이 파라미터의 값을 HTML의 body에서 파싱해 가져옵니다.
             @RequestBody AWSKeyDto key) {
-        switch (type) {
+        return switch (type) {
             // 만약 URL 파라미터 "test"가 s3일 경우,
-            case "s3":
+            case "s3" ->
                 // 주어진 값으로 s3 엔드포인트를 테스트합니다.
-                return awsController.testS3(key);
+                    awsController.testS3(key);
             // 만약 URL 파라미터 "test"가 dynamo일 경우,
-            case "dynamo":
+            case "dynamo" ->
                 // 주어진 값으로 DynamoDB 엔드포인트를 테스트합니다.
-                return awsController.testDynamo(key);
-        }
-        return new ResultDto("Unknown type");
+                    awsController.testDynamo(key);
+            default -> new ResultDto("Unknown type");
+        };
     }
-
-
-
 }

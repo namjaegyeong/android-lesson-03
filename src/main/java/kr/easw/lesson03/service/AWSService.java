@@ -16,18 +16,17 @@ import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.util.Arrays;
-import java.util.UUID;
 
 @Service
 public class AWSService {
-    private static final String BUCKET_NAME = "easw-random-bucket-" + UUID.randomUUID();
+    private static final String BUCKET_NAME = "easw-random-bucket";
 
     public ResultDto testS3(AWSKeyDto awsKey) {
         AmazonS3 client;
         try {
             client = AmazonS3ClientBuilder.standard()
                     .withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(awsKey.getApiKey(), awsKey.getApiSecretKey())))
-                    .withRegion(Regions.AP_NORTHEAST_2)
+                    .withRegion(Regions.US_EAST_1)
                     .build();
         } catch (Exception ex) {
             System.err.println("S3 Client Test - Key verification failed");
@@ -59,7 +58,7 @@ public class AWSService {
         try {
             client = AmazonS3ClientBuilder.standard()
                     .withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(awsKey.getApiKey(), awsKey.getApiSecretKey())))
-                    .withRegion(Regions.AP_NORTHEAST_2)
+                    .withRegion(Regions.US_EAST_1)
                     .build();
         } catch (Exception ex) {
             System.err.println("Dyanmo Client Test - Key verification failed");
@@ -67,10 +66,10 @@ public class AWSService {
         }
         try {
             client.listBuckets();
-        } catch (Exception ex) {
             System.err.println("Dynamo Client Test - S3 ListBucket Failed");
-            ex.printStackTrace();
             return new ResultDto("failed");
+        } catch (Exception ex) {
+            // Ignored
         }
 
         try {
@@ -90,7 +89,7 @@ public class AWSService {
         try {
             dynamoClient = AmazonDynamoDBClient.builder()
                     .withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(awsKey.getApiKey(), awsKey.getApiSecretKey())))
-                    .withRegion(Regions.AP_NORTHEAST_2)
+                    .withRegion(Regions.US_EAST_1)
                     .build();
             db = new DynamoDB(dynamoClient);
         } catch (Exception ex) {
